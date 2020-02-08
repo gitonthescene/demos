@@ -29,7 +29,7 @@ def solve( pegs, sz, currentpeg, offset, max ):
     disc = pegs[currentpeg].pop()
     pegs[ (currentpeg+offset)%3 ].append( disc )
 
-    print( genStacks( pegs[:], max ) )
+    print( genStacks( pegs, max ) )
 
     # Restore cleared stuff
     if sz > 1:
