@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict
+import sys
 
-def main():
+def main( center ):
     with open( "/dev/stdin" ) as f:
         words = [ w.strip() for w in f ]
 
@@ -27,7 +28,7 @@ def main():
     counts = sorted(set(sum( (list( x.keys() ) for x in bylettercount.values()), [] ) ) )
 
     print( "SPELLING BEE GRID\n" )
-    print( " ".join( sorted( x for x in set(samplepan.upper()) ) ) )
+    print( center.upper() + " " + " ".join( sorted( x for x in set(samplepan.upper()).difference([center]) ) ) )
     out = "\nWORDS: %d, POINTS: %d, PANGRAMS: %d" % ( len(words), points, len(pangrams) )
     perfect = [ x for x in pangrams if len(x) == 7 ]
     if perfect:
@@ -52,4 +53,4 @@ def main():
         print( " ".join( "%s-%d" % ( k, len(v)) for k, v in sorted(tlmap.items()) ) )
 
 if __name__ == "__main__":
-    main()
+    main( sys.argv[1] )
