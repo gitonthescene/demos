@@ -23,10 +23,10 @@ def main():
 
     counts = sorted(set(sum( (list( x.keys() ) for x in bylettercount.values()), [] ) ) )
 
-    out = "WORDS %d, POINTS %d, PANGRAMS: %d" % ( len(words), points, len(pangrams) )
+    out = "WORDS: %d, POINTS: %d, PANGRAMS: %d" % ( len(words), points, len(pangrams) )
     perfect = [ x for x in pangrams if len(x) == 7 ]
     if perfect:
-        out += " (%s PERFECT)" % ( perfect, )
+        out += " (%s Perfect)" % ( perfect, )
     if len( bylettercount ) == 7:
         out += ", BINGO"
 
