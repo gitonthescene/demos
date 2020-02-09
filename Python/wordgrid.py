@@ -10,8 +10,9 @@ def main():
     bycount = defaultdict( set )
     twoletter = defaultdict( lambda: defaultdict( set ) )
     pangrams = set()
+    samplepan = None
     points = 0
-    
+
     for word in words:
         bylettercount[ word[0].upper() ][ len(word) ].add( word )
         bycount[ len(word) ].add( word )
@@ -19,11 +20,15 @@ def main():
         if len(set(word)) == 7:
             pangrams.add( word )
             points += 7
+            samplepan = word
+
         points += 1 if len(word) == 4 else len(word)
 
     counts = sorted(set(sum( (list( x.keys() ) for x in bylettercount.values()), [] ) ) )
 
-    out = "WORDS: %d, POINTS: %d, PANGRAMS: %d" % ( len(words), points, len(pangrams) )
+    print( "SPELLING BEE GRID\n" )
+    print( " ".join( sorted( x for x in set(samplepan.upper()) ) ) )
+    out = "\nWORDS: %d, POINTS: %d, PANGRAMS: %d" % ( len(words), points, len(pangrams) )
     perfect = [ x for x in pangrams if len(x) == 7 ]
     if perfect:
         out += " (%s Perfect)" % ( perfect, )
