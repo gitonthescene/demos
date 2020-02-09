@@ -38,13 +38,15 @@ def main( center ):
     if len( bylettercount ) == 7:
         out += ", BINGO"
 
+    print( out )
+
     print( "\nFirst character frequency:\n")
     print( "\n".join( "%s x %d" % (l,f) for l,f in sorted(byletter.items()) ) )
 
     print( "\nWord length frequency:\n")
     print( "\n".join( "%sL: %d" % (c,f) for c,f in sorted(bycount.items()) ) )
 
-    out += "\n\nGrid:\n\n"
+    out = "\n\nGrid:\n\n"
     out += "".join( ("\t%3d" % ( c, ) for c in counts) ) + "\tTOT\n"
     for letter in bylettercount:
         out += "%3s:" % ( letter, )
