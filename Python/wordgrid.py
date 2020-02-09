@@ -8,12 +8,14 @@ def main():
 
     bylettercount = defaultdict( lambda: defaultdict( set ) )
     bycount = defaultdict( set )
+    twoletter = defaultdict( lambda: defaultdict( set ) )
     pangrams = set()
     points = 0
     
     for word in words:
         bylettercount[ word[0].upper() ][ len(word) ].add( word )
         bycount[ len(word) ].add( word )
+        twoletter[word[0].upper()][ word[:2].upper() ].add( word )
         if len(set(word)) == 7:
             pangrams.add( word )
             points += 7
@@ -39,6 +41,10 @@ def main():
     out += "TOT:"+ "".join( "\t%3d" % ( len(c), ) for _,c in sorted(bycount.items()) ) + "\n"
 
     print( out )
+
+    print( "\nTwo letter list:" )
+    for _, tlmap in twoletter.items():
+        print( " ".join( "%s-%d" % ( k, len(v)) for k, v in sorted(tlmap.items()) ) )
 
 if __name__ == "__main__":
     main()
