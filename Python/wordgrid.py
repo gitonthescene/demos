@@ -41,7 +41,7 @@ def main( center ):
     for letter in bylettercount:
         out += "%3s:" % ( letter, )
         for cnt in counts:
-            out += "\t%3d" % ( len(bylettercount[letter][cnt]), ) if cnt in bylettercount[letter] else "\t"
+            out += "\t%3d" % ( len(bylettercount[letter][cnt]), ) if cnt in bylettercount[letter] else "\t  -"
         out += "\t%3d" % ( sum( len(bylettercount[letter][cnt]) for cnt in counts ), )+ "\n"
 
     out += "TOT:"+ "".join( "\t%3d" % ( len(c), ) for _,c in sorted(bycount.items()) ) + ("\t%3d" % (len(words),)) +"\n"
