@@ -7,17 +7,17 @@ def main( center ):
     with open( "/dev/stdin" ) as f:
         words = [ w.strip() for w in f ]
 
-    bylettercount = defaultdict( lambda: defaultdict( set ) )
-    bycount = defaultdict( set )
-    twoletter = defaultdict( lambda: defaultdict( set ) )
+    bylettercount = defaultdict( lambda: defaultdict( lambda: 0 ) )
+    bycount = defaultdict( lambda: 0 )
+    twoletter = defaultdict( lambda: defaultdict( lambda: 0 ) )
     pangrams = set()
     samplepan = None
     points = 0
 
     for word in words:
-        bylettercount[ word[0].upper() ][ len(word) ].add( word )
-        bycount[ len(word) ].add( word )
-        twoletter[word[0].upper()][ word[:2].upper() ].add( word )
+        bylettercount[ word[0].upper() ][ len(word) ] += 1
+        bycount[ len(word) ] += 1
+        twoletter[word[0].upper()][ word[:2].upper() ] += 1
         if len(set(word)) == 7:
             pangrams.add( word )
             points += 7
@@ -41,16 +41,16 @@ def main( center ):
     for letter in bylettercount:
         out += "%3s:" % ( letter, )
         for cnt in counts:
-            out += "\t%3d" % ( len(bylettercount[letter][cnt]), ) if cnt in bylettercount[letter] else "\t  -"
-        out += "\t%3d" % ( sum( len(bylettercount[letter][cnt]) for cnt in counts ), )+ "\n"
+            out += "\t%3d" % ( bylettercount[letter][cnt], ) if cnt in bylettercount[letter] else "\t  -"
+        out += "\t%3d" % ( sum( bylettercount[letter][cnt] for cnt in counts ), )+ "\n"
 
-    out += "TOT:"+ "".join( "\t%3d" % ( len(c), ) for _,c in sorted(bycount.items()) ) + ("\t%3d" % (len(words),)) +"\n"
+    out += "TOT:"+ "".join( "\t%3d" % ( c, ) for _,c in sorted(bycount.items()) ) + ("\t%3d" % (len(words),)) +"\n"
 
     print( out )
 
     print( "\nTwo letter list:" )
     for _, tlmap in twoletter.items():
-        print( " ".join( "%s-%d" % ( k, len(v)) for k, v in sorted(tlmap.items()) ) )
+        print( " ".join( "%s-%d" % (k, v) for k, v in sorted(tlmap.items()) ) )
 
 if __name__ == "__main__":
     main( sys.argv[1] )
