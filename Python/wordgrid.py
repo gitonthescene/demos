@@ -48,7 +48,7 @@ def main( center ):
 
     print( out )
 
-    print( "\nTwo letter list:" )
+    print( "\nTwo letter list:\n" )
     for _, tlmap in twoletter.items():
         print( " ".join( "%s-%d" % (k, v) for k, v in sorted(tlmap.items()) ) )
 
