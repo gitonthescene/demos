@@ -9,6 +9,7 @@ def main( center ):
 
     bylettercount = defaultdict( lambda: defaultdict( lambda: 0 ) )
     bycount = defaultdict( lambda: 0 )
+    byletter = defaultdict( lambda: 0 )
     twoletter = defaultdict( lambda: defaultdict( lambda: 0 ) )
     pangrams = set()
     samplepan = None
@@ -17,6 +18,7 @@ def main( center ):
     for word in words:
         bylettercount[ word[0].upper() ][ len(word) ] += 1
         bycount[ len(word) ] += 1
+        byletter[ word[0].upper() ] += 1
         twoletter[word[0].upper()][ word[:2].upper() ] += 1
         if len(set(word)) == 7:
             pangrams.add( word )
@@ -36,13 +38,19 @@ def main( center ):
     if len( bylettercount ) == 7:
         out += ", BINGO"
 
+    print( "\nFirst character frequency:\n")
+    print( "\n".join( "%s x %d" % (l,f) for l,f in sorted(byletter.items()) ) )
+
+    print( "\nWord length frequency:\n")
+    print( "\n".join( "%sL: %d" % (c,f) for c,f in sorted(bycount.items()) ) )
+
     out += "\n\nGrid:\n\n"
     out += "".join( ("\t%3d" % ( c, ) for c in counts) ) + "\tTOT\n"
     for letter in bylettercount:
         out += "%3s:" % ( letter, )
         for cnt in counts:
             out += "\t%3d" % ( bylettercount[letter][cnt], ) if cnt in bylettercount[letter] else "\t  -"
-        out += "\t%3d" % ( sum( bylettercount[letter][cnt] for cnt in counts ), )+ "\n"
+        out += "\t%3d" % ( byletter[letter], )+ "\n"
 
     out += "TOT:"+ "".join( "\t%3d" % ( c, ) for _,c in sorted(bycount.items()) ) + ("\t%3d" % (len(words),)) +"\n"
 
