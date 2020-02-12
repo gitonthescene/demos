@@ -73,7 +73,7 @@ def solve( center, words ):
     print( "\nWord length frequency:\n")
     print( "\n".join( "%sL: %d" % (c,f) for c,f in sorted(bycount.items()) ) )
 
-    out = "\n\nGrid:\n\n"
+    out = "\nGrid:\n"
     out += "".join( ("\t%3d" % ( c, ) for c in counts) ) + "\tTOT\n"
     for letter in bylettercount:
         out += "%3s:" % ( letter, )
@@ -81,7 +81,7 @@ def solve( center, words ):
             out += "\t%3d" % ( bylettercount[letter][cnt], ) if cnt in bylettercount[letter] else "\t  -"
         out += "\t%3d" % ( byletter[letter], )+ "\n"
 
-    out += "TOT:"+ "".join( "\t%3d" % ( c, ) for _,c in sorted(bycount.items()) ) + ("\t%3d" % (len(words),)) +"\n"
+    out += "TOT: "+ "".join( "%3d\t" % ( c, ) for _,c in sorted(bycount.items()) ) + ("%3d" % (len(words),)) +"\n"
 
     print( out )
 
