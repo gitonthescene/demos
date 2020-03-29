@@ -3,7 +3,8 @@
 from functools import reduce
 
 class DoulbleLinkedNode:
-    def __init__( self ):
+    def __init__( self, me=None ):
+        self.me = self if me is None else me
         self.nxt = self
         self.prv = self
 
@@ -14,7 +15,7 @@ class DoulbleLinkedNode:
         ins.nxt = nxt
         self.nxt = ins
         nxt.prv = ins
-        return ins
+        return ins.me
 
     def removeMeAcross( self ):
         nxt = self.nxt
@@ -36,57 +37,66 @@ class DoulbleLinkedNode:
             curr = curr.nxt
             if curr in out:
                 break
-        print( ": ".join( str(n.getVal()) for n in out ) )
+        print( ": ".join( str(n.me.getVal()) for n in out ) )
 
-class QuadLinkedNode( DoulbleLinkedNode ):
+class QuadLinkedNode:
     def __init__( self ):
-        super().__init__()
-        self.up = self
-        self.dwn = self
+        self.leftright = DoulbleLinkedNode(self)
+        self.updown = DoulbleLinkedNode(self)
+
+    def addAfter( self, ins ):
+        return self.leftright.addAfter(ins.leftright)
 
     def addBelow( self, ins ):
-        dwn = self.dwn
-        ins.up = self
-        ins.dwn = dwn
-        self.dwn = ins
-        dwn.up = ins
-        return ins
+        return self.updown.addAfter(ins.updown)
+
+    def removeMeAcross( self ):
+        self.leftright.removeMeAcross()
 
     def removeMeDown( self ):
-        up = self.up
-        dwn = self.dwn
-        up.dwn = dwn
-        dwn.up = up
+        self.updown.removeMeAcross()
+
+    def reinsertMeAcross( self ):
+        self.leftright.reinsertMeAcross()
 
     def reinsertMeDown( self ):
-        up = self.up
-        dwn = self.dwn
-        up.dwn = self
-        dwn.up = self
+        self.updown.reinsertMeAcross()
+
+    def printListAfter( self ):
+        self.leftright.printListAfter()
 
     def printListBelow( self ):
-        curr = self
-        out = []
-        while True:
-            out.append( curr )
-            curr = curr.dwn
-            if curr in out:
-                break
-        print( ": ".join( str(n.getVal()) for n in out ) )
+        self.updown.printListAfter()
+
+    @property
+    def nxt( self ):
+        return self.leftright.nxt.me
+
+    @property
+    def prv( self ):
+        return self.leftright.prv.me
+
+    @property
+    def dwn( self ):
+        return self.updown.nxt.me
+
+    @property
+    def up( self ):
+        return self.updown.prv.me
 
 class RealQuad( QuadLinkedNode ):
     def __init__( self, val ):
         super().__init__()
         self.val = val
-        
+
     def getVal( self ): return self.val
-    
+
 class ColHead( QuadLinkedNode ):
     def __init__( self, nm ):
         super().__init__()
         self.nm = nm
         self.cnt = 0
-        
+
     def getVal( self ): return self.nm
 
 class Entry( QuadLinkedNode ):
@@ -94,7 +104,7 @@ class Entry( QuadLinkedNode ):
         super().__init__()
         self.colhd = colhd
         self.row = row
-        
+
     def getVal( self ): return "from %s" % (self.colhd.nm,)
 
     def removeMeDown( self ):
@@ -114,7 +124,7 @@ def cover( col ):
             e.removeMeDown()
             e = e.nxt
         row = row.dwn
-        
+
 def uncover( col ):
     row = col.up
     while row != col:
@@ -125,7 +135,7 @@ def uncover( col ):
         row = row.up
 
     col.reinsertMeAcross()
-        
+
 def pickRow( e ):
     entry = e
     while True:
@@ -163,7 +173,7 @@ def algox( hdr ):
             return [row.row]+res
         rejectRow( row )
         row = row.dwn
-        
+
 def main():
     grid = [[0,0,1,0,1,1,0],
             [1,0,0,1,0,0,1],
