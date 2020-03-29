@@ -17,13 +17,13 @@ class DoulbleLinkedNode:
         nxt.prv = ins
         return ins.me
 
-    def removeMeAcross( self ):
+    def removeMe( self ):
         nxt = self.nxt
         prv = self.prv
         nxt.prv = prv
         prv.nxt = nxt
 
-    def reinsertMeAcross( self ):
+    def reinsertMe( self ):
         nxt = self.nxt
         prv = self.prv
         nxt.prv = self
@@ -51,16 +51,16 @@ class QuadLinkedNode:
         return self.updown.addAfter(ins.updown)
 
     def removeMeAcross( self ):
-        self.leftright.removeMeAcross()
+        self.leftright.removeMe()
 
     def removeMeDown( self ):
-        self.updown.removeMeAcross()
+        self.updown.removeMe()
 
     def reinsertMeAcross( self ):
-        self.leftright.reinsertMeAcross()
+        self.leftright.reinsertMe()
 
     def reinsertMeDown( self ):
-        self.updown.reinsertMeAcross()
+        self.updown.reinsertMe()
 
     def printListAfter( self ):
         self.leftright.printListAfter()
