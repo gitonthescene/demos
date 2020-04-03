@@ -158,7 +158,21 @@ def rejectRow( e ):
         if entry == e.prv:
             break
 
+def buildColumnHeads( colnms ):
+    '''
+    Helper function to build linked column headers with a dictionary into them by name
+    '''
+    colheads = reduce( lambda l, nm: [ l[-1].addAfter( ColHead(nm) ) ]+l, colnms, [ColHead( "::head::" )] )
+    header = colheads.pop()
+
+    constraintDict = dict( zip( colnms, reversed(colheads) ) )
+    return header, constraintDict
+
 def algox( hdr ):
+    '''
+    Given an appropriately built grid, search for solution.
+    Returns False if no such solution exists or the list of rows if one does.
+    '''
     out = []
     hdr.nxt.iterAcross( lambda nd: out.append( nd.cnt ) )
 
