@@ -96,8 +96,8 @@ class ColHead(QuadLinkedNode):
         self.cnt = 0
 
     def addBelow(self, ins):
-        super().addBelow(ins)
         self.cnt += 1
+        return super().addBelow(ins)
 
     def removeMeDown(self):
         super().removeMeDown()
@@ -117,7 +117,7 @@ class Entry(QuadLinkedNode):
 
     def addBelow(self, ins):
         self.colhd.cnt += 1
-        super().addBelow(ins)
+        return super().addBelow(ins)
 
     def removeMeDown(self):
         super().removeMeDown()
