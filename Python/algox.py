@@ -186,8 +186,6 @@ def algox(hdr):
     Given an appropriately built grid, search for solution.
     Returns False if no such solution exists or the list of rows if one does.
     '''
-    out = []
-    hdr.nxt.iterAcross(lambda nd: out.append(nd.cnt))
 
     if hdr.nxt == hdr:
         return True
