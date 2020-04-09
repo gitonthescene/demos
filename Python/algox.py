@@ -99,12 +99,6 @@ class ColHead(QuadLinkedNode):
         self.cnt += 1
         return super().addBelow(ins)
 
-    def removeMeDown(self):
-        super().removeMeDown()
-
-    def reinsertMeDown(self):
-        super().reinsertMeDown()
-
 
 class Entry(QuadLinkedNode):
 
@@ -207,7 +201,7 @@ def algox(hdr):
         row = row.dwn
 
 
-def main():
+def main():  # pragma: no cover
     # 0 0 1 0 1 1 0
     # 1 0 0 1 0 0 1
     # 0 1 1 0 0 1 0
@@ -234,5 +228,5 @@ def main():
     print("\n".join(res))
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()

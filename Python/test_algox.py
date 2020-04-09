@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
-from algox import DoubleLinkedNode, QuadLinkedNode, ColHead, Entry
+from algox import DoubleLinkedNode, QuadLinkedNode, ColHead, Entry, buildColumnHeads, algox
+from nose.tools import eq_
 
 
 def cycleOfTwo(n1, n2, links):
     (nxt, prv) = links
-    assert nxt(n1) == n2
-    assert nxt(n2) == n1
-    assert prv(n1) == n2
-    assert prv(n2) == n1
+    eq_(nxt(n1), n2)
+    eq_(nxt(n2), n1)
+    eq_(prv(n1), n2)
+    eq_(prv(n2), n1)
 
 
 def getAPI(clz, members):
@@ -29,8 +30,8 @@ def linkedNodeTest(nm):
         n1 = clz()
         addAfter, removeMe, reinsertMe, iterOver = getAPI(clz, members)
 
-        assert nxt(n1) == n1
-        assert prv(n1) == n1
+        eq_(nxt(n1), n1)
+        eq_(prv(n1), n1)
 
         n2 = clz()
         addAfter(n1, n2)
@@ -40,11 +41,11 @@ def linkedNodeTest(nm):
 
         removeMe(n1)
         # n2 no longer points to n1
-        assert nxt(n2) == n2
-        assert prv(n2) == n2
+        eq_(nxt(n2), n2)
+        eq_(prv(n2), n2)
         # n1 still points to n2
-        assert nxt(n1) == n2
-        assert prv(n1) == n2
+        eq_(nxt(n1), n2)
+        eq_(prv(n1), n2)
 
         reinsertMe(n1)
         # back to previous state
@@ -56,7 +57,7 @@ def linkedNodeTest(nm):
             lst.append(x)
 
         iterOver(n1, collect)
-        assert lst == [n1, n2]
+        eq_(lst, [n1, n2])
 
     fn.description = nm
     return fn
@@ -83,7 +84,7 @@ def test_generator():
 
 def test_colhd():
     c1 = ColHead("c1")
-    assert c1.cnt == 0
+    eq_(c1.cnt, 0)
 
     dwn = lambda n: getattr(n, 'dwn')
     up = lambda n: getattr(n, 'up')
@@ -94,24 +95,61 @@ def test_colhd():
     c1.addBelow(e1)
 
     cycleOfTwo(c1, e1, (dwn, up))
-    assert c1.cnt == 1
+    eq_(c1.cnt, 1)
 
     e1.removeMeDown()
-    assert c1.cnt == 0
+    eq_(c1.cnt, 0)
 
     e1.reinsertMeDown()
-    assert c1.cnt == 1
+    eq_(c1.cnt, 1)
 
     e2 = Entry(c1, "E2")
     e1.addBelow(e2)
-    assert c1.cnt == 2
+    eq_(c1.cnt, 2)
 
     e2.removeMeDown()
-    assert c1.cnt == 1
+    eq_(c1.cnt, 1)
 
     c2 = ColHead("c2")
     c1.addAfter(c2)
 
     cycleOfTwo(c1, c2, (nxt, prv))
-    assert c1.cnt == 1
-    assert c2.cnt == 0
+    eq_(c1.cnt, 1)
+    eq_(c2.cnt, 0)
+
+
+def constructGrid(colnms, grid):
+    header, colDict = buildColumnHeads(colnms)
+    for row in grid:
+        prev = None
+        for nm in row:
+            col = colDict[nm]
+            e = Entry(col, row)
+            col.up.addBelow(e)
+            if prev:
+                prev.addAfter(e)
+            prev = e
+            col = col.nxt
+
+    return header
+
+
+def test_algox():
+    # 0 1
+    # 1 0
+    header = constructGrid("AB", ["A", "B"])
+    res = algox(header)
+    eq_(set(res), set(("A", "B")))
+
+    # 0 1
+    # 1 1
+    header = constructGrid("AB", ["B", "AB"])
+    res = algox(header)
+    eq_(set(res), set(["AB"]))
+
+    # 0 1 0
+    # 1 1 0
+    # 0 1 1
+    header = constructGrid("ABC", ["B", "AB", "BC"])
+    res = algox(header)
+    eq_(res, False)
