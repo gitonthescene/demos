@@ -3,7 +3,7 @@
 from functools import reduce
 
 
-class DoulbleLinkedNode:
+class DoubleLinkedNode:
 
     def __init__(self, me=None):
         self.me = self if me is None else me
@@ -44,8 +44,8 @@ class DoulbleLinkedNode:
 class QuadLinkedNode:
 
     def __init__(self):
-        self.leftright = DoulbleLinkedNode(self)
-        self.updown = DoulbleLinkedNode(self)
+        self.leftright = DoubleLinkedNode(self)
+        self.updown = DoubleLinkedNode(self)
 
     def addAfter(self, ins):
         return self.leftright.addAfter(ins.leftright)
@@ -101,11 +101,9 @@ class ColHead(QuadLinkedNode):
 
     def removeMeDown(self):
         super().removeMeDown()
-        self.cnt -= 1
 
     def reinsertMeDown(self):
         super().reinsertMeDown()
-        self.cnt += 1
 
 
 class Entry(QuadLinkedNode):
