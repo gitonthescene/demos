@@ -63,7 +63,7 @@ def linkedNodeTest(nm):
     return fn
 
 
-TESTS = [
+LINK_TESTS = [
     ('double linked list',
      (DoubleLinkedNode, "addAfter removeMe reinsertMe iterOver".split(),
       'nxt prv'.split())),
@@ -78,7 +78,7 @@ TESTS = [
 
 
 def test_generator():
-    for nm, tstargs in TESTS:
+    for nm, tstargs in LINK_TESTS:
         yield (linkedNodeTest('test ' + nm),) + tstargs
 
 
@@ -134,22 +134,26 @@ def constructGrid(colnms, grid):
     return header
 
 
-def test_algox():
+def algoxGridTester(colnms, grid, expect):
+    header = constructGrid(colnms, grid)
+    res = algox(header)
+    eq_(res, expect)
+
+
+GRID_TESTS = [
     # 0 1
     # 1 0
-    header = constructGrid("AB", ["A", "B"])
-    res = algox(header)
-    eq_(set(res), set(("A", "B")))
-
+    ("AB", ["A", "B"], ["B", "A"]),
     # 0 1
     # 1 1
-    header = constructGrid("AB", ["B", "AB"])
-    res = algox(header)
-    eq_(set(res), set(["AB"]))
-
+    ("AB", ["B", "AB"], ["AB"]),
     # 0 1 0
     # 1 1 0
     # 0 1 1
-    header = constructGrid("ABC", ["B", "AB", "BC"])
-    res = algox(header)
-    eq_(res, False)
+    ("ABC", ["B", "AB", "BC"], False)
+]
+
+
+def test_algoxGrids():
+    for testargs in GRID_TESTS:
+        yield (algoxGridTester,) + testargs
